@@ -1,25 +1,27 @@
 import gmsh
-import numpy as np
 
 gmsh.initialize()
 
-gmsh.merge("Dedo_v1.step")
+gmsh.merge("Dedo_v1_mod.step")
 gmsh.model.mesh.generate(3)
-gmsh.write("dedo_v1.vtk")
+gmsh.write("a.vtk")
 gmsh.fltk.run()
 gmsh.clear()
 
-gmsh.merge("A.step")
+gmsh.merge("Dedo_v1_mod.step")
 gmsh.model.mesh.generate(2)
-gmsh.write("A_visu.stl")
+gmsh.model.mesh.refine()
+gmsh.model.mesh.refine()
+gmsh.model.mesh.refine()
+gmsh.write("a_visu.stl")
 gmsh.fltk.run()
 gmsh.clear()
 
-gmsh.merge("B.step")
+gmsh.merge("Capsula_v1_mod.step")
 gmsh.model.mesh.generate(2)
-gmsh.write("B.stl")
+gmsh.model.mesh.refine()
+gmsh.write("b.stl")
 gmsh.fltk.run()
 gmsh.clear()
-
 
 gmsh.finalize()
