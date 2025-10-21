@@ -48,33 +48,27 @@ def createScene(rootNode):
 
                 rootNode.addObject('RequiredPlugin', name='Sofa.Component.Topology.Mapping') # Needed to use components [Tetra2TriangleTopologicalMapping]
                 rootNode.addObject('FreeMotionAnimationLoop')
-                rootNode.addObject('GenericConstraintSolver', maxIterations=100, tolerance = 0.0000001)
-                rootNode.dt = 0.1
+                rootNode.addObject('GenericConstraintSolver', maxIterations=100, tolerance = 0.00001)
+                rootNode.dt = 0.01
 
 		#gripper
                 gripper = rootNode.addChild('gripper')
                 gripper.addObject('EulerImplicitSolver', name='odesolver')
-                
                 gripper.addObject('SparseLDLSolver', name='preconditioner')
-
                 gripper.addObject('ShewchukPCGLinearSolver', iterations=15, name='linearsolver', tolerance=1e-5, preconditioners='preconditioner', use_precond=True, update_step=1)
 
                 gripper.addObject('MeshVTKLoader', name='loader', filename='a.vtk')
                 gripper.addObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 gripper.addObject('TetrahedronSetTopologyModifier')
-
                 gripper.addObject('MechanicalObject', name='tetras', template='Vec3', showIndices=False)
                 gripper.addObject('UniformMass', totalMass=0.5)
-                
-    
                 gripper.addObject('TetrahedronFEMForceField', template='Vec3', name='FEM', method='large', poissonRatio=0.49,  youngModulus=1200000)
 
                 gripper.addObject('BoxROI', name='boxROI', box=[-45, -10, 18,  -40, 10, 32], drawBoxes=True, position="@tetras.rest_position", tetrahedra="@container.tetrahedra")
                 gripper.addObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness=1e12)
                 gripper.addObject('GenericConstraintCorrection', linearSolver='@preconditioner')
 
-                              
-                
+                                              
 		#gripper/cavity
                 
         
@@ -82,7 +76,7 @@ def createScene(rootNode):
                 cavity.addObject('MeshSTLLoader', name='loader', filename='b.stl')
                 cavity.addObject('MeshTopology', src='@loader', name='topo')
                 cavity.addObject('MechanicalObject', name='cavity')
-                cavity.addObject('SurfacePressureConstraint', triangles='@topo.triangles', value=22000, valueType=0)
+                cavity.addObject('SurfacePressureConstraint', triangles='@topo.triangles', value=2200, valueType=0)
                 cavity.addObject('BarycentricMapping', name='mapping',  mapForces=True, mapMasses=True)
 
 
